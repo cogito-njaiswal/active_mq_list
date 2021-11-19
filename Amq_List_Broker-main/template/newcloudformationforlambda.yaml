@@ -5,6 +5,18 @@ Parameters:
     Description: "LambdaFunction Version"
     Type: String
     Default: ""
+  MessageCount:
+    Description: "mq broker msg count"
+    Type: String
+    Default: "100"
+  VPCSubnet:
+    Description: "VPC Subnet list"
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: "subnet-09a108e8c78ea69aa,subnet-0d5be8a4cb56c15c9"
+  VPCSecurityGroup:
+    Description: "VPC Security Group list"
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: "sg-003401576ce8c592d,sg-0efb09e99fadd0f89"  
   BrokerUserName:
     Description: "Enter username to connect mq"
     Type: String
@@ -69,8 +81,8 @@ Resources:
         S3Bucket: !Ref LambdaBucketName
         S3Key:  active_mq_list_main.zip
       VpcConfig:
-         SecurityGroupIds: [sg-003401576ce8c592d,sg-0efb09e99fadd0f89]
-         SubnetIds: [subnet-09a108e8c78ea69aa,subnet-0d5be8a4cb56c15c9]
+         SecurityGroupIds: !Ref VPCSecurityGroup
+         SubnetIds: !Ref VPCSubnet
       Environment:
         Variables:
           SendToEmail: !Ref SendToEmail
