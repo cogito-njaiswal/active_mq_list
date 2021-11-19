@@ -49,7 +49,6 @@ Resources:
               - Effect: Allow
                 Action:
                   - secretsmanager:*
-                  - ec2:*
                   - mq:*
                   - ses:*
                 Resource: "*"
