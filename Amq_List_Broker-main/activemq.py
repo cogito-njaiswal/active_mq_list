@@ -5,25 +5,20 @@ import os
 from botocore.exceptions import ClientError
 import xml.etree.ElementTree as ET
 
-
-send_to = os.environ['sendtoemail']
-mq_user_name = os.environ['broker_username']
-mq_password = os.environ['broker_password']
-message_count = os.environ ['message_count']
+send_to = os.environ['SendToEmail']
+mq_user_name = os.environ['BrokerUserName']
+mq_password = os.environ['BrokerPassword']
+message_count_os = os.environ ['MessageCount']
 
 
 def lambda_handler(event, context):
     try:
-        clientname= os.environ['client_name']
-        get_request(clientname)
+        client_name= os.environ['ClientName']
+        get_request(client_name)
     except:
         print("An exception occurred while trying loop")
         
-            
     
-
-
-
 def get_secret(secret_name):
     print("in secret manager")
     region_name = "us-east-1"
@@ -102,13 +97,13 @@ def get_request(broker_name):
     try:
         print("i am in get request to reterieve data")
         
-        getpassword=get_secret(mq_password)
-        print(getpassword)
-        getUsername=get_secret(mq_user_name)
-        print(getusername)
+        get_password=get_secret(mq_password)
+        print(get_password)
+        get_username=get_secret(mq_user_name)
+        print(get_username)
         url=geturl(broker_name) 
         print("this is url",url)
-        req = requests.get(url,auth=(getusername,getpassword ), verify=False)
+        req = requests.get(url,auth=(get_username,get_password ), verify=False)
         root = ET.fromstring(req.content)
         print(root)
         decoded_response = req.content.decode('utf-8')
@@ -117,17 +112,17 @@ def get_request(broker_name):
 
         
         for  child in treeOne.iter():
-            customername=(child.attrib.get('name'))
-            messagecount=(child.attrib.get('consumerCount'))
+            customer_name=(child.attrib.get('name'))
+            message_count=(child.attrib.get('consumerCount'))
         
-            if (customername is not None):
-               customernamereturn=CustomerName
-            if (messagecount is not None):
-               messagecount = int(messagecount)
+            if (customer_name is not None):
+               customer_namereturn=customer_name
+            if (message_count is not None):
+               message_count = int(message_count)
                print(messagecount,customernamereturn)
-               if(messagecount >= message_count):
+               if(message_count >= message_count_os):
                    send_email()     
-                   return customernamereturn,messagecount
+                   return customer_namereturn,message_count
     except:
         print("exception is occured please check the broker details")
                
