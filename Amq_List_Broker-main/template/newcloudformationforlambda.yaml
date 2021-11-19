@@ -1,19 +1,19 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "get activemq each topic count"
 Parameters:
-  LambdaVersion:
+  lambdaversion:
     Description: "LambdaFunction Version"
     Type: String
     Default: ""
-  brokerUserName:
+  brokerusername:
     Description: "Enter username to connect mq"
     Type: String
     Default: "mq_user_name"
-  brokerPassword:
+  brokerpassword:
     Description: "Enter the password to connect mq broker"
     Type: String
     Default: "mq_password"
-  SendToEmail:
+  sendtoemail:
     Description: "Send To Email for Notification"
     Type: String
     Default: "njaiswal@cogitocorp.com"
@@ -21,7 +21,7 @@ Parameters:
     Description: "enter the client name"
     Type: String
     Default: ""
-  LambdaBucketName:
+  lambdabucketname:
     Description: "Name of S3 Bucket for where Lambda function zip files are uploaded"
     Type: String
     Default: "stage-cogito-lambda-bucket"
@@ -74,10 +74,10 @@ Resources:
          SubnetIds: [subnet-09a108e8c78ea69aa,subnet-0d5be8a4cb56c15c9]
       Environment:
         Variables:
-          SendToEmail: !Ref SendToEmail
+          SendToEmail: !Ref sendtoemail
           client_Name : !Ref clientname
-          broker_userName: !Ref brokerUserName
-          broker_Password: !Ref brokerPassword
+          broker_userName: !Ref brokerusername
+          broker_Password: !Ref brokerpassword
       Runtime: python3.7
       Timeout: 300
   ScheduledRule: 
