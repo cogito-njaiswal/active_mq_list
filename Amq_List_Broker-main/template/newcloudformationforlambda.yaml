@@ -67,7 +67,7 @@ Resources:
       Role: !GetAtt Lambdarole.Arn
       Code:
         S3Bucket: !Ref LambdaBucketName
-        S3Key:  Amq_List_Broker.zip
+        S3Key:  active_mq_list_main.zip
       VpcConfig:
          SecurityGroupIds: [sg-003401576ce8c592d,sg-0efb09e99fadd0f89]
          SubnetIds: [subnet-09a108e8c78ea69aa,subnet-0d5be8a4cb56c15c9]
