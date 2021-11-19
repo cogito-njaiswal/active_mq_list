@@ -5,16 +5,17 @@ import os
 from botocore.exceptions import ClientError
 import xml.etree.ElementTree as ET
 
-client_Name = os.environ['client_Name']
-send_to = os.environ['SendToEmail']
-mq_user_Name = os.environ['broker_userName']
-mq_password = os.environ['broker_Password']
+
+send_to = os.environ['sendtoemail']
+mq_user_name = os.environ['broker_username']
+mq_password = os.environ['broker_password']
+message_count = os.environ ['message_count']
 
 
 def lambda_handler(event, context):
     try:
-        clientName= os.environ['client_Name']
-        get_request(clientName)
+        clientname= os.environ['client_name']
+        get_request(clientname)
     except:
         print("An exception occurred while trying loop")
         
@@ -84,11 +85,11 @@ def send_email():
             },
         Message={
             'Subject': {
-                'Data': CustomerNamereturn
+                'Data': customernamereturn
                 },
             'Body': {
                 'Text': {
-                    'Data': CustomerNamereturn +"has greate count please dequeue it"
+                    'Data': customernamereturn +"has greate count please dequeue it"
                     }
                 }
             }
@@ -101,32 +102,32 @@ def get_request(broker_name):
     try:
         print("i am in get request to reterieve data")
         
-        getPassword=get_secret(mq_password)
-        print(getPassword)
-        getUsername=get_secret(mq_user_Name)
-        print(getUsername)
+        getpassword=get_secret(mq_password)
+        print(getpassword)
+        getUsername=get_secret(mq_user_name)
+        print(getusername)
         url=geturl(broker_name) 
         print("this is url",url)
-        req = requests.get(url,auth=(getUsername,getPassword ), verify=False)
+        req = requests.get(url,auth=(getusername,getpassword ), verify=False)
         root = ET.fromstring(req.content)
         print(root)
         decoded_response = req.content.decode('utf-8')
         treeOne = ET.fromstring(decoded_response)
-        global CustomerNamereturn
+        global customernamereturn
 
         
         for  child in treeOne.iter():
-            CustomerName=(child.attrib.get('name'))
-            MessageCount=(child.attrib.get('consumerCount'))
+            customername=(child.attrib.get('name'))
+            messagecount=(child.attrib.get('consumerCount'))
         
-            if (CustomerName is not None):
-               CustomerNamereturn=CustomerName
-            if (MessageCount is not None):
-               MessageCount = int(MessageCount)
-               print(MessageCount,CustomerNamereturn)
-               if(MessageCount >= 100):
+            if (customername is not None):
+               customernamereturn=CustomerName
+            if (messagecount is not None):
+               messagecount = int(messagecount)
+               print(messagecount,customernamereturn)
+               if(messagecount >= message_count):
                    send_email()     
-                   return CustomerNamereturn,MessageCount
+                   return customernamereturn,messagecount
     except:
         print("exception is occured please check the broker details")
                
